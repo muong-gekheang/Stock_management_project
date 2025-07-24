@@ -1,6 +1,8 @@
 import Button from "./Button";
 import ProductCard from "./ProductCard";
-import Header from "./header";
+import Header from "./Header";
+import { productData, categoryData } from "../SampleData/sampleData"; 
+
 function Products() {
   return (
     <>
@@ -16,8 +18,13 @@ function Products() {
           </div>
 
           <div>
-            <ProductCard />
-            <ProductCard />
+            {productData.map((product) => (
+              <ProductCard 
+                key={product.productCode}
+                product={product}
+                category={categoryData.find(cat => cat.categoryCode === product.categoryCode)} 
+              />
+            ))}
           </div>
       </div>
     </>

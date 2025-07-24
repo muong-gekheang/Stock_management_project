@@ -1,32 +1,55 @@
+import { useState } from "react";
 import Button from "./Button";
+import Sale from "./Sale";
+import { useNavigate } from "react-router-dom";
 
-function ProductCard(){
+function ProductCard({product, category}) {
+    const navigate = useNavigate();
+    if (!product) {
+        return <div>Product not found</div>;
+    }
+    const handleViewButtonClick = () => {
+        navigate(`/products/${product.productCode}`, {state: { product, category }});
+    }
+
+    const [isSalePopUpOpen, setSalePopUpOpen] = useState(false);
+
+    const handleOpenSale = () => setSalePopUpOpen(true);
+    const handleCloseSale = () => setSalePopUpOpen(false);
+
     return(
         <>
-            <div className="flex bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg px-4 py-3 items-center gap-x-4 outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10 hover:">
+            <div className="flex bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg px-4 py-3 items-center gap-x-4">
                 <div className="flex flex-col item-center ">
                     <div className="w-64 h-64 bg-blue-100 flex items-center justify-center">
                         <p className="text-blue-500 font-medium">Product Image </p>
                     </div>
-                    <p className="p-4">3 stripes cropped t-shirt - BLUE</p>
+                    <p className="p-4">{product.name}</p>
                 </div>
                 <div className="flex flex-col px-6 gap-7 justify-center">   
                     <div className="flex flex-row gap-2">
                         <span>Stock:</span>
-                        <span>12</span>
+                        <span>{product.stockQuantity}</span>
                         <span>in stock</span>
                     </div>
                     <div className="flex flex-row gap-2">
                         <span>Category:</span>
-                        <span>Crop Tops</span>
+                        <span>{category ? category.name : "Unknown"}</span>
                     </div>
                     <div className="flex flex-row gap-2">
-                        <span>Price:</span>
-                        <span>$12.00</span>
+                        <span>Selling Price:</span>
+                        <span>${product.sellingPrice}</span>
                     </div>
+
+                    
                     <div className="flex flex-row gap-4 ">
-                        <Button name="View" bgColor="#6E53AB" />
-                        <Button name="Sale" bgColor="#6E53AB" />
+                        <Button name="View" bgColor="#6E53AB"
+                            onClick={handleViewButtonClick}
+                        />
+                        <Button name="Add Sale" bgColor="#6E53AB"
+                            onClick={handleOpenSale}
+                        />
+                        <Sale isOpen={isSalePopUpOpen} onClose={handleCloseSale} product={product}/>
                     </div>
                 </div>
             </div>
