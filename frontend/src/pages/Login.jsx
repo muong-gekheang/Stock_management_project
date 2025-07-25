@@ -20,7 +20,7 @@ const LoginPage = () => {
       
       localStorage.setItem('token', data.token)
       alert('login successfully')
-      navigate('/')
+      navigate("/dashboard/");
       
     } catch (err) {
       console.error('Login error:', err);

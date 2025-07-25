@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = ({ setCurrentPage }) => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [storeName, setStoreName] = useState('');
   const [storeCategory, setStoreCategory] = useState('');
@@ -21,6 +22,7 @@ const RegisterPage = ({ setCurrentPage }) => {
         },
         body: JSON.stringify({
         Username: username,
+        Email: email,
         Password: password,
         StoreName: storeName,
         StoreCategory: storeCategory
@@ -57,6 +59,16 @@ const RegisterPage = ({ setCurrentPage }) => {
             onChange={(e) => setUsername(e.target.value)}
             className="w-[100%] px-3 py-2 mb-4 border border-gray-300 rounded-lg text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
           /><br />
+
+          <label htmlFor="email" className="block text-left text-[#6E53AB] font-medium text-lg">Email</label>
+          <input
+            id="email"
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-[100%] px-3 py-2 mb-4 border border-gray-300 rounded-lg text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          /><br />
+
           <label htmlFor="password" className="block text-left text-[#6E53AB] font-medium text-lg">Password</label>
           <input
             id="password"

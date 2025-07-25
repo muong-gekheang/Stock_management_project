@@ -29,6 +29,7 @@ function App() {
         <Route path="/Revenue" element={<RevenueDashboard />} />
         <Route path="/dashboard" element={<Dashboard />}/>
         <Route path="/add-product" element={<AddProduct />} />
+        <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes>
     </>
   )

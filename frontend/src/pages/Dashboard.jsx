@@ -24,6 +24,7 @@ import {
 import Header from '../components/Header';
 
 export default function Dashboard ({ onMenuClick }) {
+
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
 
