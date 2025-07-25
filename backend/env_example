@@ -1,0 +1,6 @@
+JWT_SECRET=enter_your_own_JWT_secret_key_here
+DB_HOST=localhost
+DB_USER=to_be_changed
+DB_PASS=to_be_changed
+DB_NAME=to_be_changed
+PORT=to_be_changed

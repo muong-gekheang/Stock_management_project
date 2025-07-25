@@ -1,6 +1,6 @@
 import { Op, Sequelize } from "sequelize";
 import db from '../models/index.js';
-const { Sale, SaleItem, Product } = db;
+const { Sale, SaleItem, Product, Category } = db;
 
 
 // Helper to get start of today
@@ -34,17 +34,24 @@ export async function getDashboardStats(req, res) {
 
     // Get total products for this user
     const totalProducts = await Product.count({
-      where: { UserID: userId },
+      include: [{
+        model: Category,
+        where: { UserID: userId }
+      }]
     });
+
 
     // Get products with low stock alerts
     const lowStockProducts = await Product.findAll({
       where: {
-        UserID: userId,
         CurrentStock: {
           [Op.lte]: Sequelize.col("MinStockLevel"),
         },
       },
+      include: [{
+        model: Category,
+        where: { UserID: userId }
+      }],
       attributes: ["ProductID", "ProductName", "CurrentStock", "MinStockLevel"],
     });
 
@@ -93,11 +100,13 @@ export async function getDashboardStats(req, res) {
           },
           required: true,
         },
-        {
-          model: Product,
+        { model: Product,
           as: 'Product',
-          where: { UserID: userId },
           required: true,
+          include: [{
+            model: Category,
+            where: { UserID: userId }
+          }]
         },
       ],
     });
@@ -132,8 +141,11 @@ export async function getDashboardStats(req, res) {
         {
           model: Product,
           as: 'Product',
-          where: { UserID: userId },
           required: true,
+          include: [{
+            model: Category,
+            where: { UserID: userId }
+          }]
         },
       ],
     });
