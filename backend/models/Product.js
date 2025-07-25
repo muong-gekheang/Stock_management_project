@@ -38,15 +38,6 @@ const Product = sequelize.define('Product', {
       allowNull: false,
       field: 'MinStockLevel'
     },
-    UserID: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      field: 'UserID',
-      references: {
-        model: 'User',
-        key: 'UserID'
-      }
-    },
     ImageURL: {
       type: DataTypes.TEXT,
       field: 'ImageURL'

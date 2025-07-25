@@ -14,10 +14,13 @@ export const getUserProducts = async (req, res) => {
     }
 
     const products = await Product.findAll({
-      where: { UserID: userId },
-      include: [{ model: Category, attributes: ['CategoryName'] }],
+      include: [{
+        model: Category,
+        attributes: ['CategoryName'],
+        where: { UserID: userId}
+      }],
       order: [['ProductName', 'ASC']]
-    });
+    })
 
     console.log("Products fetched for user:", products);
 
@@ -50,7 +53,6 @@ export const createUserProduct = async (req, res ) => {
       CurrentStock: currentStock,
       MinStockLevel: minStockLevel,
       ImageURL: imageUrl,
-      UserID: userId,
     });
 
     res.status(201).json({ message: 'Product created successfully', product });

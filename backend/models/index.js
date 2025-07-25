@@ -14,14 +14,12 @@ import PurchaseItem from './PurchaseItem.js';
 // -----------------------
 // USER RELATIONSHIPS
 // -----------------------
-User.hasMany(Product, { foreignKey: 'UserID' });
 User.hasMany(Supplier, { foreignKey: 'UserID' });
 User.hasMany(Category, { foreignKey: 'UserID' });
 User.hasMany(Inventory_Transaction, { foreignKey: 'UserID' });
 User.hasMany(Purchase, { foreignKey: 'UserID' });
 User.hasMany(Sale, { foreignKey: 'UserID' });
 
-Product.belongsTo(User, { foreignKey: 'UserID' });
 Supplier.belongsTo(User, { foreignKey: 'UserID' });
 Category.belongsTo(User, { foreignKey: 'UserID' });
 Inventory_Transaction.belongsTo(User, { foreignKey: 'UserID' });

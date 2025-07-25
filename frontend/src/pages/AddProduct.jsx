@@ -16,6 +16,7 @@ export default function AddProduct({ onMenuClick }) {
     });
 
     const [categories, setCategories] = useState([]);
+    const [user, setUser] = useState(null);
 
     // Fetch categories on mount
     useEffect(() => {
@@ -34,6 +35,19 @@ export default function AddProduct({ onMenuClick }) {
         };
 
         fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        axios.get('http://localhost:3001/api/users/profile', {
+        headers: { Authorization: `Bearer ${token}` }
+        })
+        .then((res) => {
+        setUser(res.data);
+        })
+        .catch((err) => {
+        console.error('Error fetching user:', err);
+        });
     }, []);
 
     const handleChange = (e) => {
@@ -112,7 +126,7 @@ export default function AddProduct({ onMenuClick }) {
     
   return (
     <div className='bg-purple-100'>
-        <Header pageTitle="Add New Product" onMenuClick={onMenuClick} />
+        <Header pageTitle="Add New Product" onMenuClick={onMenuClick} profileImageUrl={user?.ImageURL}/>
         <div className="py-10 max-w-4xl mx-auto ">
             <div className="bg-white shadow-lg rounded-2xl p-6">
                 
