@@ -4,9 +4,10 @@ import User from '../models/User.js'; //
 import { JWT_SECRET } from '../config/env.js';
 
 export const register = async (req, res) => {
-  const { Username, Password, StoreName, StoreCategory } = req.body;
+  const { Username, Email, Password, StoreName, StoreCategory } = req.body;
   console.log('Request Body:', req.body);
   console.log('Username:', Username);
+  
 
 
   try {
@@ -20,6 +21,7 @@ export const register = async (req, res) => {
 
     await User.create({
       Username,
+      Email,
       Password: hashedPassword,
       StoreName,
       StoreCategory,
@@ -55,7 +57,7 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       { UserID: user.UserID, Username: user.Username },
       JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '1d' }
     );
     
     res.json({ token });
