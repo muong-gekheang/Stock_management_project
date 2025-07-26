@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 function Products() {
   const navigate = useNavigate();
   const [productData, setProductData] = useState([]);
-  const [categoryData, setCategoryData] = useState([]);
   const [loading, setLoading] = useState(true);
    
   const handleAddProductIsClick = () => {
@@ -15,25 +14,22 @@ function Products() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    Promise.all([
-      fetch("http://localhost:3001/api/products",  {
-        headers: { Authorization: `Bearer ${token}`}
-      }).then((res) => res.json()),
-      fetch("http://localhost:3001/api/categories", {
-          headers: { Authorization: `Bearer ${token}` }
-      }).then((res) => res.json())
-    ])
-      .then(([products, categories]) => {
-        console.log("Fetched products:", products);
-        console.log("Fetched categories:", categories);
-        setProductData(products);
-        setCategoryData(categories);
-        setLoading(false);
-      })
-      .catch((error) => {
+
+    const fetchProduct = async () => {
+      try{
+        const response = await fetch("http://localhost:3001/api/products", { headers: { Authorization: `Bearer ${token}`}
+        });
+
+        const data = await response.json();
+        console.log("Fetched product data (stringtified): ", JSON.stringify (data, null, 2));
+        setProductData(data);
+      } catch (error){
         console.error("Error fetching data:", error);
+      } finally {
         setLoading(false);
-      });
+      }
+    }
+    fetchProduct();
   }, []);
 
   return (
@@ -59,9 +55,9 @@ function Products() {
             ) : (
               productData.map((product) => (
                 <ProductCard 
-                  key={product.productCode}
+                  key={product.productID}
                   product={product}
-                  category={categoryData.find(cat => cat.categoryCode === product.categoryCode)} 
+                  category={product.Category} 
                 />
               ))
             )}

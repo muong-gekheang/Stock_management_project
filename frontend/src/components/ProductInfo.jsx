@@ -3,6 +3,7 @@ import Header from "./Header";
 import { useState, useRef} from "react";
 import { useLocation } from "react-router-dom";
 import ProductUpdate from "./productUpdate";
+import axios from 'axios';
 function ProductInfo() {
     const location = useLocation();
     const { product, category } = location.state || {};
@@ -29,6 +30,24 @@ function ProductInfo() {
             reader.readAsDataURL(file);
         }
     }
+
+    const handleDeleteProduct = async () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+        if (!confirmDelete) return;
+
+        try {
+            const token = localStorage.getItem("token");
+            await axios.delete(`http://localhost:3001/api/products/${product.ProductID}`, {
+            headers: { Authorization: `Bearer ${token}` },
+            });
+
+            alert("Product deleted successfully!");
+            window.location.href = "/products"
+        } catch (error) {
+            console.error("Error deleting product:", error);
+            alert("Failed to delete product.");
+        }
+    };
 
     const hanldeOpenUpdateProduct = () => setUpdateProductOpen(true);
     const handleCloseUpdateProduct = () => setUpdateProductOpen(false);
@@ -61,32 +80,32 @@ function ProductInfo() {
                 </div>
 
                 <div className="flex flex-col ml-20">
-                    <p className="text-4xl font-bold">{product.name}</p>
+                    <p className="text-4xl font-bold">{product.ProductName}</p>
                     <div className="flex flex-row gap-4 mt-8 text-2xl">
                         <span>Product Code:</span>
-                        <span>{product.productCode}</span>
+                        <span>{product.ProductID}</span>
                     </div>
 
                     <div className="flex flex-row gap-4 mt-8 text-2xl">
                         <span>Category:</span>
-                        <span>{category.name}</span>
+                        <span>{category ? category.CategoryName : "Unknown"}</span>
                     </div>
 
                     <div className="flex flex-row gap-4 mt-8 text-2xl">
                         <span>Imported Price:</span>
-                        <span>${product.importedPrice}</span>
+                        <span>${product.PurchasePrice}</span>
                     </div>
                     <div className="flex flex-row gap-4 mt-8 text-2xl">
                         <span>Selling Price:</span>
-                        <span>${product.sellingPrice}</span>
+                        <span>${product.SalePrice}</span>
                     </div>
                     <div className="flex flex-row gap-4 mt-8 text-2xl">
                         <span>Stock Quantity:</span>
-                        <span>{product.stockQuantity}</span>
+                        <span>{product.CurrentStock}</span>
                     </div>
                     <div className="flex flex-row gap-4 mt-8 text-2xl">
                         <span>Low Stock Threshold:</span>
-                        <span>{product.lowStockThreshold}</span>
+                        <span>{product.MinStockLevel}</span>
                     </div>
 
                     <div className="flex flex-col justify-center  gap-4 ml-6 mt-10">
@@ -94,7 +113,9 @@ function ProductInfo() {
                             <Button name="Update" bgColor="#6E53AB" 
                                 onClick={hanldeOpenUpdateProduct}
                             />
-                            <Button name="Delete" bgColor="#EF4444" />
+                            <Button name="Delete" bgColor="#EF4444"
+                                onClick={handleDeleteProduct}
+                            />
 
                         </div>
 

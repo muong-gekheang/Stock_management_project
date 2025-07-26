@@ -1,14 +1,37 @@
 // src/pages/RecordSalePage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { X, Plus, Trash2 } from 'lucide-react';
+import axios from 'axios';
+
 
 export default function RecordSalePage({ onMenuClick }) {
+  const [productData, setProductData] = useState([]);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const fetchProduct = async () => {
+      try{
+        const response = await fetch("http://localhost:3001/api/products", { headers: { Authorization: `Bearer ${token}`}
+        });
+
+        const data = await response.json();
+        console.log("Fetched product data (stringtified): ", JSON.stringify (data, null, 2));
+        setProductData(data);
+      } catch (error){
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchProduct();
+  }, []);
+
+  // sale metadata including customer name and date
   const [sale, setSale] = useState({
     customerName: '',
     date: new Date().toISOString().split('T')[0],
   });
 
+  // sale items info
   const [items, setItems] = useState([
     { productId: '', quantity: 1, unitPrice: '' }
   ]);
@@ -19,10 +42,18 @@ export default function RecordSalePage({ onMenuClick }) {
     const newItems = [...items];
     newItems[index][field] = value;
 
-    // Auto-fill unitPrice if productId is in a real system (mock here)
-    if (field === 'productId' && value === '37') {
-      newItems[index].unitPrice = '1.20';
+    // Auto-fill unitPrice if productId is in a real system 
+    if (field === 'productId') {
+      const selectedProduct = productData.find(p => p.ProductID.toString() === value); // converted to string cuz the value from select or input is string 
+      console.log("Selected productId:", value);
+      console.log("Found product:", selectedProduct);
+      if(selectedProduct){
+          const price = parseFloat(selectedProduct.SalePrice).toFixed(2);
+          console.log("Sale price to set:", price);
+          newItems[index].unitPrice = price;
+      }
     }
+
 
     setItems(newItems);
   };
@@ -101,15 +132,21 @@ export default function RecordSalePage({ onMenuClick }) {
               {items.map((item, index) => (
                 <div key={index} className="flex gap-3 items-end">
                   <div className="flex-1">
-                    <label className="block text-xs text-gray-600">Product ID</label>
-                    <input
-                      type="number"
+                    <label className="block text-xs text-gray-600">Product ID - Name</label>
+                    <select
                       value={item.productId}
                       onChange={(e) => handleItemChange(index, 'productId', e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="e.g., 37"
                       required
-                    />
+                    >
+                      <option value="">Select product</option>
+                      {productData.map((product) => (
+                        <option key={product.ProductID} value={product.ProductID}>
+                          [{product.ProductID}] - {product.ProductName}
+                        </option>
+                      ))}
+                    </select>
+
                   </div>
                   <div className="w-24">
                     <label className="block text-xs text-gray-600">Qty</label>

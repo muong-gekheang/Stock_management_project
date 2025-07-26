@@ -36,7 +36,7 @@ function AddCategory({isOpen, onClose}){
             onClose();
         }catch(error){
             console.error('Add category error:', error.response?.data || error.message);
-            setError(err.response?.data?.message || "Failed to add category.");
+            setError(error.response?.data?.message || "Failed to add category.");
         } finally {
             setLoading(false);
         }

@@ -4,14 +4,17 @@ import Sale from "./Sale";
 import { useNavigate } from "react-router-dom";
 
 function ProductCard({product, category}) {
+    console.log("Product prop: stringify", JSON.stringify(product, null, 2));
+    console.log("Category prop: stringify", JSON.stringify(category, null, 2));
     const navigate = useNavigate();
     if (!product) {
         return <div>Product not found</div>;
     }
     const handleViewButtonClick = () => {
-        navigate(`/products/${product.productCode}`, {state: { product, category }});
+        navigate(`/products/${product.ProductID}`, {state: { product, category }});
+        
     }
-
+    
     const [isSalePopUpOpen, setSalePopUpOpen] = useState(false);
 
     const handleOpenSale = () => setSalePopUpOpen(true);
@@ -24,21 +27,22 @@ function ProductCard({product, category}) {
                     <div className="w-64 h-64 bg-blue-100 flex items-center justify-center">
                         <p className="text-blue-500 font-medium">Product Image </p>
                     </div>
-                    <p className="p-4">{product.name}</p>
+                    <p className="p-4">{product.ProductName}</p>
                 </div>
                 <div className="flex flex-col px-6 gap-7 justify-center">   
                     <div className="flex flex-row gap-2">
                         <span>Stock:</span>
-                        <span>{product.stockQuantity}</span>
+                        <span>{product.CurrentStock}</span>
                         <span>in stock</span>
                     </div>
                     <div className="flex flex-row gap-2">
                         <span>Category:</span>
-                        <span>{category ? category.name : "Unknown"}</span>
+                        <span>{category ? category.CategoryName : "Unknown"}</span>
+                    
                     </div>
                     <div className="flex flex-row gap-2">
                         <span>Selling Price:</span>
-                        <span>${product.sellingPrice}</span>
+                        <span>${product.SalePrice}</span>
                     </div>
 
                     

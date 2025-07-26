@@ -1,23 +1,47 @@
 import ProductCard from "./ProductCard";
-import Header from "./Header"
-import Button from "./Button"
-import { productData, categoryData} from "../SampleData/sampleData";
+import Header from "./Header";
+import Button from "./Button";
+import { useState, useEffect } from 'react';
+
 import { useParams } from "react-router-dom";
 
 function ProductByCategory(){
-    const {categoryCode} = useParams();
+    const {categoryID} = useParams();
+    const [productData, setProductData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     if (isNaN(categoryCode)) {
         return <div>Invalid category</div>;
     }
+
+      useEffect(() => {
+        const token = localStorage.getItem("token");
     
-    const filteredProducts = productData.filter((product) => parseInt(product.categoryCode) === parseInt(categoryCode))
+        const fetchProduct = async () => {
+            try{
+            const response = await fetch("http://localhost:3001/api/products", { headers: { Authorization: `Bearer ${token}`}
+            });
+
+            const data = await response.json();
+            console.log("Fetched product data (stringtified): ", JSON.stringify (data, null, 2));
+            setProductData(data);
+            } catch (error){
+            console.error("Error fetching data:", error);
+            } finally {
+            setLoading(false);
+            }
+        }
+        fetchProduct();
+        }, []);
+    
+    
+    const filteredProducts = productData.filter((product) => product.CategoryCode === parseInt(categoryID))
 
     if(filteredProducts.length === 0) {
         return <div>There is no product in this category</div>
     }
 
-    const category = categoryData.find(cat => parseInt(cat.categoryCode) === parseInt(categoryCode))
+    const category = categoryData.find(cat => parseInt(cat.categoryCode) === parseInt(categoryID))
     const categoryName = category ? category.name : "Unknown Category";
     return(
         <>
@@ -33,9 +57,9 @@ function ProductByCategory(){
                 </div>
                 {filteredProducts.map((product) => (
                     <ProductCard 
-                    key={product.productCode}
+                    key={product.ProductID}
                     product={product}
-                    category={category} 
+                    category={product.Category} 
                     />
                 ))}   
             </div>

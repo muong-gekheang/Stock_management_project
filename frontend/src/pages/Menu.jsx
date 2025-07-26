@@ -1,3 +1,6 @@
+/* This page is duplicate with menu.jsx file in component. */
+/* This page is not used */
+
 import React from 'react'; // Make sure React is imported
 
 const Menu = () => {

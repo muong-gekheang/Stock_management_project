@@ -6,10 +6,10 @@ import "reactjs-popup/dist/index.css";
 import { useState, useEffect } from "react";
 function Sale({isOpen, onClose, product}) {
     const [quantity, setQuantity] = useState("1");
-    const [soldPrice, setSoldPrice] = useState(product ? product.sellingPrice : 0);
+    const [soldPrice, setSoldPrice] = useState(product ? product.SalePrice : 0);
     useEffect(() => {
         setQuantity("1");
-        setSoldPrice(product?.sellingPrice || "");
+        setSoldPrice(product?.SalePrice || "");
     }, [product]); 
     return (
     <>
