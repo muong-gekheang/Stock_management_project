@@ -22,7 +22,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/categories", categoryRoutes)
+app.use("/api/categories", categoryRoutes);
 
 const PORT = process.env.PORT || 3001
 
