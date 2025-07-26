@@ -1,5 +1,6 @@
 // src/pages/RecordSalePage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Header from '../components/Header';
 import { X, Plus, Trash2 } from 'lucide-react';
 
@@ -13,19 +14,59 @@ export default function RecordSalePage({ onMenuClick }) {
     { productId: '', quantity: 1, unitPrice: '' }
   ]);
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
+  const [products, setProducts] = useState([])
+
+  // ✅ Fetch user-specific products
+  useEffect(() => {
+    const fetchUserProducts = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const res = await axios.get('http://localhost:3001/api/products', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log("Fetched:", res.data);
+        setProducts(res.data);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch products', err);
+        showError('Failed to fetch products. Please login or try again.');
+      }
+    };
+
+    fetchUserProducts();
+  }, []);
+
+  const showError = (message) => {
+    setError(message);
+    setTimeout(() => {
+      setError(null);
+    }, 2000);
+  };
 
   const handleItemChange = (index, field, value) => {
     const newItems = [...items];
     newItems[index][field] = value;
-
-    // Auto-fill unitPrice if productId is in a real system (mock here)
-    if (field === 'productId' && value === '37') {
-      newItems[index].unitPrice = '1.20';
-    }
-
     setItems(newItems);
   };
+
+  const handleProductSelect = (e, index) => {
+    const selectedProductId = e.target.value;
+    const selectedProduct = products.find(
+      (p) => p.ProductID === parseInt(selectedProductId)
+    );
+    const autoPrice = selectedProduct?.SalePrice?.toString() || '';
+
+    const newItems = [...items];
+    newItems[index] = {
+      ...newItems[index],
+      productId: selectedProductId,
+      unitPrice: autoPrice,
+    };
+    setItems(newItems);
+  };
+
 
   const addItem = () => {
     setItems([...items, { productId: '', quantity: 1, unitPrice: '' }]);
@@ -43,13 +84,31 @@ export default function RecordSalePage({ onMenuClick }) {
     }, 0).toFixed(2);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const total = calculateTotal();
+    setError('')
+    setMessage('')
 
-    // Mock success
-    setMessage(`✅ Sale recorded! Total: $${total}`);
-    console.log({ sale, items, total });
+    const token = localStorage.getItem('token')
+    try {
+      const res = await axios.post('http://localhost:3001/api/sales', {
+        customerName: sale.customerName,
+        date: sale.date,
+        items: items.map(item => ({
+          productId: parseInt(item.productId),
+          quantity: parseInt(item.quantity),
+          unitPrice: parseFloat(item.unitPrice)
+        }))
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    setMessage('💰 Sale recorded successfully!');
+    console.log('Sale created:', res.data);
 
     // Reset form
     setTimeout(() => {
@@ -57,6 +116,11 @@ export default function RecordSalePage({ onMenuClick }) {
       setItems([{ productId: '', quantity: 1, unitPrice: '' }]);
       setMessage('');
     }, 2000);
+
+    } catch (err) {
+      console.error('Sale creation failed:', err);
+      showError(err.response?.data?.error || 'Sale failed. Please try again.');
+    }
   };
 
   return (
@@ -69,6 +133,12 @@ export default function RecordSalePage({ onMenuClick }) {
             {message}
           </div>
         )}
+        {error && (
+          <div className="mb-6 p-4 text-center bg-red-100 text-red-800 rounded-lg font-medium">
+            {error}
+          </div>
+        )}
+
 
         <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-2xl p-8 space-y-8">
           {/* Sale Info */}
@@ -101,15 +171,27 @@ export default function RecordSalePage({ onMenuClick }) {
               {items.map((item, index) => (
                 <div key={index} className="flex gap-3 items-end">
                   <div className="flex-1">
-                    <label className="block text-xs text-gray-600">Product ID</label>
-                    <input
-                      type="number"
+                    <label className="block text-xs text-gray-600">Product Name</label>
+                    <select
                       value={item.productId}
-                      onChange={(e) => handleItemChange(index, 'productId', e.target.value)}
+                      onChange={(e) => handleProductSelect(e, index)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="e.g., 37"
                       required
-                    />
+                    >
+                      <option value="">Select a product</option>
+                      {products.map((product) => (
+                        <option 
+                          key={product.ProductID} 
+                          value={product.ProductID}
+                          disabled={product.CurrentStock <= 0}
+                          >
+                          {product.ProductName} {product.CurrentStock <= 0 ? '(Out of stock)' : ''}
+                        </option>
+                      ))}
+                    </select>
+
+
+
                   </div>
                   <div className="w-24">
                     <label className="block text-xs text-gray-600">Qty</label>

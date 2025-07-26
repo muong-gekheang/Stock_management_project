@@ -1,4 +1,4 @@
-// src/pages/AddProduct.jsx
+
 import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import Header from '../components/Header';
@@ -16,9 +16,7 @@ export default function AddProduct({ onMenuClick }) {
     });
 
     const [categories, setCategories] = useState([]);
-    const [user, setUser] = useState(null);
-
-    // Fetch categories on mount
+    // Fetch categories 
     useEffect(() => {
         const fetchCategories = async () => {
             const token = localStorage.getItem('token');
@@ -35,19 +33,6 @@ export default function AddProduct({ onMenuClick }) {
         };
 
         fetchCategories();
-    }, []);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        axios.get('http://localhost:3001/api/users/profile', {
-        headers: { Authorization: `Bearer ${token}` }
-        })
-        .then((res) => {
-        setUser(res.data);
-        })
-        .catch((err) => {
-        console.error('Error fetching user:', err);
-        });
     }, []);
 
     const handleChange = (e) => {
@@ -125,9 +110,9 @@ export default function AddProduct({ onMenuClick }) {
     }
     
   return (
-    <div className='bg-purple-100'>
-        <Header pageTitle="Add New Product" onMenuClick={onMenuClick} profileImageUrl={user?.ImageURL}/>
-        <div className="py-10 max-w-4xl mx-auto ">
+    <div className='bg-gray-50'>
+        <Header pageTitle="Add New Product" onMenuClick={onMenuClick} />
+        <div className="py-10 max-w-4xl mx-auto">
             <div className="bg-white shadow-lg rounded-2xl p-6">
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -141,7 +126,7 @@ export default function AddProduct({ onMenuClick }) {
                             value={formData.productName}
                             onChange={handleChange}
                             placeholder="Enter product name"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
                     </div>
@@ -151,7 +136,7 @@ export default function AddProduct({ onMenuClick }) {
                             name="categoryId"
                             value={formData.categoryId}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         >
                             <option value="">Select Category</option>
@@ -175,7 +160,7 @@ export default function AddProduct({ onMenuClick }) {
                             value={formData.purchasePrice}
                             onChange={handleChange}
                             placeholder="0.00"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
                     </div>
@@ -188,7 +173,7 @@ export default function AddProduct({ onMenuClick }) {
                             value={formData.salePrice}
                             onChange={handleChange}
                             placeholder="0.00"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
                     </div>
@@ -202,7 +187,7 @@ export default function AddProduct({ onMenuClick }) {
                             value={formData.currentStock}
                             onChange={handleChange}
                             placeholder="0"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
                     </div>
@@ -214,13 +199,11 @@ export default function AddProduct({ onMenuClick }) {
                             value={formData.minStockLevel}
                             onChange={handleChange}
                             placeholder="0"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
                     </div>
                 </div>
-
-                {/* Expiry Date and Image */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     
                     <div>
@@ -229,7 +212,7 @@ export default function AddProduct({ onMenuClick }) {
                         type="file"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="w-full px-4 py-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+                        className="w-full px-4 py-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                     />
                     </div>
                 </div>
@@ -238,7 +221,7 @@ export default function AddProduct({ onMenuClick }) {
                 <div className="flex justify-end">
                     <button
                     type="submit"
-                    className="px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition"
+                    className="px-6 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
                     >
                     Save Product
                     </button>

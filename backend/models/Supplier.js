@@ -13,15 +13,10 @@ const Supplier = sequelize.define('Supplier', {
       allowNull: false,
       field: 'SupplierName'
     },
-    ContactName: {
-      type: DataTypes.STRING(100),
-      allowNull: true,
-      field: 'ContactName'
-    },
-    Phone: {
+    PhoneNumber: {
       type: DataTypes.STRING(20),
       allowNull: false,
-      field: 'Phone'
+      field: 'PhoneNumber'
     },
     UserID: {
       type: DataTypes.INTEGER,

@@ -28,36 +28,33 @@ export default function Dashboard ({ onMenuClick }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const fetchDashboard = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      console.log("Sending token to server:", token);
+    const fetchDashboard = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        console.log("Sending token to server:", token);
 
-      const response = await axios.get("http://localhost:3001/api/dashboard", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+        const response = await axios.get("http://localhost:3001/api/dashboard", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
 
-      console.log("✅ Dashboard response received:", response.data);
+        console.log("✅ Dashboard response received:", response.data);
 
-      setDashboardData(response.data);
+        setDashboardData(response.data);
 
-      
-
-
-    } catch (err) {
-      console.error("❌ Error fetching dashboard data:", err.response?.data || err.message || err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchDashboard();
-}, []);
+        
 
 
+      } catch (err) {
+        console.error("❌ Error fetching dashboard data:", err.response?.data || err.message || err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchDashboard();
+  }, []);
   
   if (loading) return <div>Loading...</div>;
   if (!dashboardData) return <div>Something went wrong</div>;
@@ -89,14 +86,14 @@ export default function Dashboard ({ onMenuClick }) {
           </Link>
 
           <Link
-            to="/record-sale"
+            to="/sale-record"
             className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm transition"
           >
             <ShoppingCart size={18} /> Record Sale
           </Link>
 
           <Link
-            to="/record-purchase"
+            to="/purchase-record"
             className="flex items-center gap-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-md text-sm transition"
           >
             <PackageCheck size={18} /> Record Purchase
@@ -132,14 +129,16 @@ export default function Dashboard ({ onMenuClick }) {
           </div>
 
           {/* Alerts */}
-          <div className="bg-white shadow rounded-lg p-4 flex items-center gap-4 border">
-            <AlertTriangle className="text-red-500" size={32} />
-            <div>
-              <p className="text-sm text-gray-500">Alerts</p>
-              <p className="text-xl font-bold">{dashboardData.lowStockAlerts.length}</p>
-              <p className="text-xs text-gray-400">Low stock</p>
+          <Link to="/products?filter=low-stock">
+            <div className="bg-white shadow rounded-lg p-4 flex items-center gap-4 border">
+              <AlertTriangle className="text-red-500" size={32} />
+              <div>
+                <p className="text-sm text-gray-500">Alerts</p>
+                <p className="text-xl font-bold">{dashboardData.lowStockAlerts.length}</p>
+                <p className="text-xs text-gray-400">Low stock</p>
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
         <div className="bg-white shadow rounded-lg p-4 border mt-6">
           <div className="flex items-center gap-2 mb-4">

@@ -53,6 +53,12 @@ SaleItem.belongsTo(Sale, { foreignKey: 'SaleId', as: 'Sale' });
 Purchase.hasMany(PurchaseItem, { foreignKey: 'PurchaseID' });
 PurchaseItem.belongsTo(Purchase, { foreignKey: 'PurchaseID' });
 
+// In models/purchase.js or model index.js
+
+Purchase.belongsTo(Supplier, { foreignKey: 'SupplierID', as: 'Supplier'});
+
+Supplier.hasMany(Purchase, { foreignKey: 'SupplierID', as: 'Purchases'});
+
 // -----------------------
 // INVENTORY RELATIONSHIPS
 // -----------------------

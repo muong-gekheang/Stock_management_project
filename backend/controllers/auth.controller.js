@@ -4,25 +4,23 @@ import User from '../models/User.js'; //
 import { JWT_SECRET } from '../config/env.js';
 
 export const register = async (req, res) => {
-  const { Username, Password, StoreName, StoreCategory } = req.body;
-  console.log('Request Body:', req.body);
-  console.log('Username:', Username);
-
+  const { username, email, password, storeName, storeCategory } = req.body;
 
   try {
-    const existingUser = await User.findOne({ where: { Username } });
+    const existingUser = await User.findOne({ where: { username } });
 
     if (existingUser) {
       return res.status(400).json({ message: 'Username already exists.' });
     }
 
-    const hashedPassword = bcrypt.hashSync(Password, 10);
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
     await User.create({
-      Username,
+      Username: username,
+      Email: email,
       Password: hashedPassword,
-      StoreName,
-      StoreCategory,
+      StoreName: storeName,
+      StoreCategory: storeCategory,
     });
 
     res.status(201).json({ message: 'User registered successfully.' });

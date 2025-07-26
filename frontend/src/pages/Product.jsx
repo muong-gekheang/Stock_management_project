@@ -3,17 +3,22 @@ import axios from 'axios';
 import { Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
+import { useLocation } from 'react-router-dom';
 
 const Product = ({ onMenuClick }) => {
+    const location = useLocation()
+    const isLowStock = new URLSearchParams(location.search).get('filter') === 'low-stock'
     const [products, setProducts] = useState([])
-
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchUserProducts = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const res = await axios.get('http://localhost:3001/api/products', {
+                const url = isLowStock
+                    ? 'http://localhost:3001/api/products/low-stock'
+                    : 'http://localhost:3001/api/products';
+                const res = await axios.get(url, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 console.log("Fetched:", res.data); 
@@ -27,21 +32,17 @@ const Product = ({ onMenuClick }) => {
         fetchUserProducts();
     }, []);
 
-
     return (
         <div className="min-h-screen bg-gray-50">
             <Header pageTitle="My Products" onMenuClick={onMenuClick} />
             <div className="flex items-center justify-between py-6 px-10  ">
-                <Search className="w-6 h-6 text-black" />
+                <Search className="w-6 h-6 text-green-900" />
                 <div className="space-x-4">
-                    <Link to="/products/add">
-                        <button className="bg-purple-600 text-white font-medium px-4 py-2 rounded shadow hover:bg-purple-700">
+                    <Link to="/add-product">
+                        <button className="bg-green-600 text-white font-medium px-4 py-2 rounded shadow hover:bg-green-700">
                            + add product
                         </button>
                     </Link>
-                    <button className="bg-purple-600 text-white font-medium px-4 py-2 rounded shadow hover:bg-purple-700">
-                        filter
-                    </button>
                 </div>
             </div>
             <main className=" px-10 py-6 space-y-6">
@@ -60,17 +61,17 @@ const Product = ({ onMenuClick }) => {
                                 <p className="text-gray-800 font-semibold">Price: ${product.SalePrice}</p>
                             </div>
                             <div className="flex space-x-4 mt-4 md:mt-0">
-                                <button className="bg-purple-600 text-white font-medium px-4 py-2 rounded hover:bg-purple-700">
+                                <button className="bg-green-600 text-white font-medium px-4 py-2 rounded hover:bg-green-700">
                                     View
                                 </button>
-                                <button className="bg-purple-600 text-white font-medium px-4 py-2 rounded hover:bg-purple-700">
-                                    Sale
+                                <button className="bg-green-600 text-white font-medium px-4 py-2 rounded hover:bg-green-700">
+                                    Update
                                 </button>
                             </div>
                         </div>
                     ))
                     ) : (
-                        <p className="text-gray-500">No products found or not logged in.</p>
+                        <p className="text-gray-500">No products found.</p>
                     )}
             </main>
         </div>

@@ -1,5 +1,6 @@
 // src/pages/RecordPurchasePage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Header from '../components/Header';
 import { X, Plus, Trash2 } from 'lucide-react';
 
@@ -13,7 +14,48 @@ export default function RecordPurchasePage({ onMenuClick }) {
     { productId: '', quantity: 1, unitCost: '' }
   ]);
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null)
+  const [suppliers, setSuppliers] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  const showError = (message) => {
+    setError(message);
+    setTimeout(() => {
+      setError(null);
+    }, 2000);
+  };
+
+  useEffect(() => {
+        const token = localStorage.getItem('token');
+        axios.get('http://localhost:3001/api/suppliers', {
+        headers: { Authorization: `Bearer ${token}` }
+        })
+        .then((res) => {
+          console.log("Suppliers fetched:", res.data);
+          setSuppliers(res.data);
+        })
+        .catch((err) => {
+        console.error('Error fetching supplier:', err);
+        });
+    }, []);
+  useEffect(() => {
+        const fetchUserProducts = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await axios.get('http://localhost:3001/api/products', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                console.log("Fetched:", res.data); 
+                setProducts(res.data);
+                setError(null);
+            } catch (err) {
+                console.error('Failed to fetch products', err);
+                setError('Failed to fetch products. Please login or try again.');
+            }
+        };
+        fetchUserProducts();
+    }, []);
 
   const handleItemChange = (index, field, value) => {
     const newItems = [...items];
@@ -37,19 +79,43 @@ export default function RecordPurchasePage({ onMenuClick }) {
     }, 0).toFixed(2);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const total = calculateTotal();
+    setError('')
+    setMessage('')
 
-    setMessage(`📦 Purchase recorded! Total: $${total}`);
-    console.log({ purchase, items, total });
+    const token = localStorage.getItem('token')
+    try {
+      const res = await axios.post('http://localhost:3001/api/purchases', {
+        supplierId: purchase.supplierId,
+        date: purchase.date,
+        items: items.map(item => ({
+          productId: parseInt(item.productId),
+          quantity: parseInt(item.quantity),
+          unitCost: parseFloat(item.unitCost)
+        }))
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
 
-    // Reset
+    setMessage('Purchase recorded successfully!');
+    console.log('Purchase created:', res.data);
+
+    // Reset form
     setTimeout(() => {
       setPurchase({ supplierId: '', date: new Date().toISOString().split('T')[0] });
       setItems([{ productId: '', quantity: 1, unitCost: '' }]);
       setMessage('');
     }, 2000);
+
+    } catch (err) {
+      console.error('Purchase creation failed:', err);
+      showError(err.response?.data?.error || 'Purchase failed. Please try again.');
+    }
   };
 
   return (
@@ -58,8 +124,13 @@ export default function RecordPurchasePage({ onMenuClick }) {
 
       <div className="py-8 px-4 max-w-4xl mx-auto">
         {message && (
-          <div className="mb-6 p-4 text-center bg-purple-100 text-purple-800 rounded-lg font-medium">
+          <div className="mb-6 p-4 text-center bg-green-100 text-green-800 rounded-lg font-medium">
             {message}
+          </div>
+        )}
+        {error && (
+          <div className="mb-6 p-4 text-center bg-red-100 text-red-800 rounded-lg font-medium">
+            {error}
           </div>
         )}
 
@@ -67,14 +138,20 @@ export default function RecordPurchasePage({ onMenuClick }) {
           {/* Purchase Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Supplier ID</label>
-              <input
-                type="number"
+              <label className="block text-sm font-medium text-gray-700 mb-1">Supplier Name</label>
+              <select
                 value={purchase.supplierId}
                 onChange={(e) => setPurchase({ ...purchase, supplierId: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="e.g., 5"
-              />
+              >
+                <option value="">Select a supplier</option>
+                  {suppliers.map((supplier) => (
+                  <option key={supplier.SupplierID} value={supplier.SupplierID}>
+                    {supplier.SupplierName}
+                  </option>
+                  ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
@@ -82,7 +159,7 @@ export default function RecordPurchasePage({ onMenuClick }) {
                 type="date"
                 value={purchase.date}
                 onChange={(e) => setPurchase({ ...purchase, date: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
           </div>
@@ -95,14 +172,19 @@ export default function RecordPurchasePage({ onMenuClick }) {
                 <div key={index} className="grid grid-cols-3 gap-3 items-end">
                   <div>
                     <label className="block text-xs text-gray-600">Product ID</label>
-                    <input
-                      type="number"
+                    <select
                       value={item.productId}
                       onChange={(e) => handleItemChange(index, 'productId', e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      placeholder="37"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       required
-                    />
+                    >
+                      <option value="">Select a product</option>
+                      {products.map((product) => (
+                        <option key={product.ProductID} value={product.ProductID}>
+                          {product.ProductName}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs text-gray-600">Qty</label>
@@ -111,7 +193,7 @@ export default function RecordPurchasePage({ onMenuClick }) {
                       min="1"
                       value={item.quantity}
                       onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       required
                     />
                   </div>
@@ -123,7 +205,7 @@ export default function RecordPurchasePage({ onMenuClick }) {
                         step="0.01"
                         value={item.unitCost}
                         onChange={(e) => handleItemChange(index, 'unitCost', e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="0.00"
                         required
                       />
@@ -143,7 +225,7 @@ export default function RecordPurchasePage({ onMenuClick }) {
             <button
               type="button"
               onClick={addItem}
-              className="mt-4 flex items-center gap-1 text-purple-600 hover:text-purple-800 font-medium"
+              className="mt-4 flex items-center gap-1 text-green-600 hover:text-green-800 font-medium"
             >
               <Plus size={16} /> Add Item
             </button>
@@ -153,7 +235,7 @@ export default function RecordPurchasePage({ onMenuClick }) {
           <div className="bg-gray-50 p-6 rounded-xl">
             <div className="flex justify-between text-lg font-semibold">
               <span>Total Cost:</span>
-              <span className="text-purple-600">${calculateTotal()}</span>
+              <span className="text-green-600">${calculateTotal()}</span>
             </div>
           </div>
 
@@ -168,7 +250,7 @@ export default function RecordPurchasePage({ onMenuClick }) {
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition"
+              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition"
             >
               ✅ Record Purchase
             </button>

@@ -1,4 +1,4 @@
-// Menu.js
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,65 +9,72 @@ const Menu = ({ onClose }) => {
       <div
         className="fixed inset-0 bg-black bg-opacity-50 z-40"
         onClick={onClose}
+        aria-hidden="true"
       ></div>
 
-      {/* Menu Drawer */}
-      <div className="absolute top-0 left-0 w-full h-screen bg-[#6a0dad] text-white flex flex-col items-center justify-center p-5 box-border z-50 font-sans">
-        <div className="flex w-full justify-between items-center absolute top-10 left-0 px-5 box-border">
+      {/* Menu Drawer - Partial Screen */}
+      <div
+        className="fixed top-0 left-0 w-64 max-w-[80vw] h-full bg-green-700 text-white flex flex-col z-50 font-sans shadow-xl transform transition-transform duration-300 ease-in-out"
+        style={{ transform: 'translateX(0)' }}
+      >
+        {/* Header Section inside Drawer */}
+        <div className="flex w-full justify-between items-center p-4 box-border border-b border-green-600">
+          <h2 className="text-xl font-bold m-0">Menu</h2>
           <button
             onClick={onClose}
-            className="bg-none border-none text-4xl cursor-pointer text-white py-[5px] px-[10px] rounded-lg transition duration-300 ease-in hover:bg-white/10"
+            className="text-white text-2xl p-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
             aria-label="Close menu"
           >
             &times;
           </button>
-          <h1 className="text-3xl m-0 absolute left-1/2 -translate-x-1/2">Inventor.io</h1>
         </div>
-        <nav className="mt-20 w-full text-center">
+
+        {/* Navigation Links */}
+        <nav className="flex-grow overflow-y-auto py-4">
           <ul className="list-none p-0 m-0">
-            <li className="mb-6">
+            <li className="mb-1 px-2">
               <Link
                 to="/"
-                className="text-white no-underline text-2xl font-medium py-2.5 px-5 rounded-lg inline-block transition duration-300 ease-in transform hover:bg-white/15 hover:scale-105"
+                className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
                 onClick={onClose}
               >
                 Home
               </Link>
             </li>
-            <li className="mb-6">
+            <li className="mb-1 px-2">
               <Link
                 to="/products"
-                className="text-white no-underline text-2xl font-medium py-2.5 px-5 rounded-lg inline-block transition duration-300 ease-in transform hover:bg-white/15 hover:scale-105"
+                className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
                 onClick={onClose}
               >
-                Product
+                Products
               </Link>
             </li>
-            <li className="mb-6">
+            <li className="mb-1 px-2">
               <Link
-                to="/category"
-                className="text-white no-underline text-2xl font-medium py-2.5 px-5 rounded-lg inline-block transition duration-300 ease-in transform hover:bg-white/15 hover:scale-105"
+                to="/sale-record" 
+                className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
                 onClick={onClose}
               >
-                Category
+                Sales
               </Link>
             </li>
-            <li className="mb-6">
+            <li className="mb-1 px-2">
               <Link
-                to="/sales"
-                className="text-white no-underline text-2xl font-medium py-2.5 px-5 rounded-lg inline-block transition duration-300 ease-in transform hover:bg-white/15 hover:scale-105"
+                to="/purchase-record" 
+                className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
                 onClick={onClose}
               >
-                Sale Records
+                Purchases
               </Link>
             </li>
-            <li>
+            <li className="mb-1 px-2">
               <Link
-                to="/profile"
-                className="text-white no-underline text-2xl font-medium py-2.5 px-5 rounded-lg inline-block transition duration-300 ease-in transform hover:bg-white/15 hover:scale-105"
+                to="/history" 
+                className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
                 onClick={onClose}
               >
-                Profile
+                History
               </Link>
             </li>
           </ul>

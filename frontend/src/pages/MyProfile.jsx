@@ -1,5 +1,6 @@
 // src/pages/ProfilePage.jsx
 import React, { useState, useEffect } from 'react';
+import { Pencil } from 'lucide-react';
 import Header from '../components/Header';
 import axios from 'axios';
 
@@ -67,6 +68,9 @@ function ProfilePage({ onMenuClick }) {
   }, []);
 
   const handleImageChange = (e) => {
+    if (!isEditing) {
+      return;
+    }
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -151,17 +155,20 @@ function ProfilePage({ onMenuClick }) {
                 />
                 <label
                   htmlFor="avatar-upload"
-                  className="absolute bottom-0 right-0 bg-indigo-600 hover:bg-indigo-700 text-white w-8 h-8 rounded-full flex items-center justify-center cursor-pointer shadow-md transition"
+                  className={`absolute bottom-0 right-0 ${
+                    isEditing
+                      ? 'bg-indigo-600 hover:bg-indigo-700 cursor-pointer'
+                      : 'bg-gray-400 cursor-not-allowed'
+                  } text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md transition`}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.828-2.828z" />
-                  </svg>
+                  <Pencil className="h-4 w-4" />
                 </label>
                 <input
                   id="avatar-upload"
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
+                  disabled={!isEditing}
                   className="hidden"
                 />
               </div>
@@ -277,7 +284,7 @@ function ProfilePage({ onMenuClick }) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 disabled:from-gray-400 text-white font-medium rounded-xl shadow transition hover:from-indigo-700"
+                    className="px-6 py-2 bg-green-600 disabled:from-gray-400 text-white font-medium rounded-xl shadow transition transform hover:scale-105 hover:bg-green-700"
                   >
                     {loading ? 'Saving...' : '💾 Save Changes'}
                   </button>
