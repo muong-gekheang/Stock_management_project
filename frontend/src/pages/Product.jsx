@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Search } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
-import { useLocation } from 'react-router-dom';
+import ProductCard from '../components/ProductCard.jsx';
 
 const Product = ({ onMenuClick }) => {
     const location = useLocation()
@@ -48,34 +48,14 @@ const Product = ({ onMenuClick }) => {
             <main className=" px-10 py-6 space-y-6">
                 {Array.isArray(products) && products.length > 0 ? (
                     products.map((product) => (
-                        <div key={product.ProductID} className="bg-white rounded shadow p-4 flex flex-col md:flex-row items-start md:items-center">
-                            <img
-                                src={product.ImageURL}
-                                alt={product.ProductName}
-                                className="w-32 h-32 object-cover rounded mr-6"
-                            />
-                            <div className="flex-1">
-                                <h2 className="text-lg font-semibold">{product.ProductName}</h2>
-                                <p className="text-gray-600">Stock: {product.CurrentStock} in stock</p>
-                                <p className="text-gray-600">Category: {product.Category?.CategoryName || 'Uncategorized'}</p>
-                                <p className="text-gray-800 font-semibold">Price: ${product.SalePrice}</p>
-                            </div>
-                            <div className="flex space-x-4 mt-4 md:mt-0">
-                                <button className="bg-green-600 text-white font-medium px-4 py-2 rounded hover:bg-green-700">
-                                    View
-                                </button>
-                                <button className="bg-green-600 text-white font-medium px-4 py-2 rounded hover:bg-green-700">
-                                    Update
-                                </button>
-                            </div>
-                        </div>
+                        <ProductCard key={product.ProductID} product={product} />
                     ))
-                    ) : (
-                        <p className="text-gray-500">No products found.</p>
-                    )}
+                ) : (
+                    <p className="text-gray-500">No products found.</p>
+                )}
+
             </main>
         </div>
-       
     )
 }
 

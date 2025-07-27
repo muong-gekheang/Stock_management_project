@@ -98,9 +98,6 @@ export default function AddProduct({ onMenuClick }) {
             if (error.response) {
                 // Server responded with error status
                 alert(`❌ ${error.response.data.message || 'Failed to save product'}`);
-            } else if (error.request) {
-                // No response received
-                alert('❌ Network error: Could not reach server');
             } else {
                 // Other errors
                 alert(`❌ Request error: ${error.message}`);

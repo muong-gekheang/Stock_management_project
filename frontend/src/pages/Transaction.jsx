@@ -4,7 +4,7 @@ import axios from 'axios';
 import Header from '../components/Header';
 import { ShoppingCart, Package, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
-export default function SaleHistoryPage({ onMenuClick }) {
+export default function TransactionPage({ onMenuClick }) {
   const [sales, setSales] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -114,12 +114,12 @@ export default function SaleHistoryPage({ onMenuClick }) {
           </div>
 
           <div className="bg-white rounded-2xl shadow-lg p-6 flex items-center">
-            <div className={`rounded-full ${grossProfit >= 0 ? 'bg-purple-100' : 'bg-red-100'} p-3 mr-4`}>
-              <DollarSign className={`${grossProfit >= 0 ? 'text-purple-600' : 'text-red-600'}`} size={24} />
+            <div className={`rounded-full ${grossProfit >= 0 ? 'bg-yellow-100' : 'bg-red-100'} p-3 mr-4`}>
+              <DollarSign className={`${grossProfit >= 0 ? 'text-yellow-600' : 'text-red-600'}`} size={24} />
             </div>
             <div>
               <p className="text-gray-500 text-sm">Gross Profit</p>
-              <p className={`text-2xl font-bold ${grossProfit >= 0 ? 'text-purple-600' : 'text-red-600'}`}>
+              <p className={`text-2xl font-bold ${grossProfit >= 0 ? 'text-yellow-600' : 'text-red-600'}`}>
                 {formatCurrency(grossProfit)}
               </p>
             </div>

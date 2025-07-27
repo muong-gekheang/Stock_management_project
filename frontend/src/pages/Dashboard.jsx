@@ -2,6 +2,7 @@ import react from 'react'
 import axios from 'axios';
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react';
+import Header from '../components/Header';
 import {
   BarChart,
   Bar,
@@ -21,8 +22,6 @@ import {
   PlusCircle,
 } from "lucide-react";
 
-import Header from '../components/Header';
-
 export default function Dashboard ({ onMenuClick }) {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -31,7 +30,6 @@ export default function Dashboard ({ onMenuClick }) {
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem('token');
-        console.log("Sending token to server:", token);
 
         const response = await axios.get("http://localhost:3001/api/dashboard", {
           headers: {
@@ -40,12 +38,7 @@ export default function Dashboard ({ onMenuClick }) {
         });
 
         console.log("✅ Dashboard response received:", response.data);
-
         setDashboardData(response.data);
-
-        
-
-
       } catch (err) {
         console.error("❌ Error fetching dashboard data:", err.response?.data || err.message || err);
       } finally {
@@ -80,7 +73,7 @@ export default function Dashboard ({ onMenuClick }) {
         <div className="flex gap-4 mt-9">
           <Link
             to="/add-product"
-            className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm transition"
+            className="flex items-center gap-1 bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-2 rounded-md text-sm transition"
           >
             <PlusCircle size={18} /> Add Product
           </Link>
@@ -94,7 +87,7 @@ export default function Dashboard ({ onMenuClick }) {
 
           <Link
             to="/purchase-record"
-            className="flex items-center gap-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-md text-sm transition"
+            className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm transition"
           >
             <PackageCheck size={18} /> Record Purchase
           </Link>
@@ -152,7 +145,7 @@ export default function Dashboard ({ onMenuClick }) {
                 <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="total" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="total" fill="#15803d" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

@@ -24,7 +24,11 @@ const LoginPage = () => {
       
     } catch (err) {
       console.error('Login error:', err);
-      setError('An unexpected error occurred. Please try again later.');
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message); // use backend's message
+      } else {
+        setError('An unexpected error occurred. Please try again later.');
+      }
     }
   }
 
@@ -33,36 +37,36 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="flex justify-center items-center bg-[#6E53AB] h-screen text-white font-sans">
+    <div className="flex justify-center items-center bg-green-700 h-screen text-white font-sans">
       <div className="bg-white p-12 md:px-15 rounded-2xl shadow-2xl text-center w-full max-w-lg">
         <div className="mb-10">
-          <h1 className="text-4xl text-[#6E53AB] font-extrabold mb-2">Login</h1>
-          <p className="text-xl text-[#6E53AB] col-">Inventor.io</p>
+          <h1 className="text-4xl text-green-700 font-extrabold mb-2">Login</h1>
+          <p className="text-xl text-green-700 col-">Inventor.io</p>
         </div>
 
         {/* Username Input */}
         <form onSubmit={handleLogin}>
           <div className="mb-6 text-left">
-            <label className="block text-[#6E53AB] font-semibold text-lg mb-1">Username</label>
+            <label className="block text-green-700 font-semibold text-lg mb-1">Username</label>
             <input
               type="text"
               placeholder="username"
               value={Username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-600"
               required
             />
           </div>
 
           {/* Password Input */}
           <div className="mb-10 text-left">
-            <label className="block text-[#6E53AB] font-semibold text-lg mb-1">Password</label>
+            <label className="block text-green-700 font-semibold text-lg mb-1">Password</label>
             <input
               type="password"
               placeholder="password"
               value={Password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-600"
               required
             />
           </div>
@@ -72,7 +76,7 @@ const LoginPage = () => {
           {/* Login Button */}
           <button 
             type="submit"
-            className="w-full py-3 text-lg font-bold bg-[#6E53AB] border-none rounded-xl text-white mt-8 cursor-pointer transition duration-150 ease-in-out transform hover:scale-105 hover:bg-[#574289] hover:text-white shadow-lg">
+            className="w-full py-3 text-lg font-bold bg-green-700 border-none rounded-xl text-white mt-8 cursor-pointer transition duration-150 ease-in-out transform hover:scale-105 hover:bg-green-800 hover:text-white shadow-lg">
             Log In
           </button>
 
@@ -82,7 +86,7 @@ const LoginPage = () => {
             <button 
               type="button"
               onClick={handleRegisterClick}
-              className="bg-transparent border-none text-[#6E53AB] cursor-pointer text-base font-bold p-0 hover:underline">
+              className="bg-transparent border-none text-green-700 cursor-pointer text-base font-bold p-0 hover:underline">
               Register
             </button>
           </p>

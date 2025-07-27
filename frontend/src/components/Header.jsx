@@ -3,23 +3,27 @@ import { NavLink, Link } from 'react-router-dom';
 import { Menu, Package } from 'lucide-react';
 import axios from 'axios';
 
-const Header = ({ pageTitle, onMenuClick }) => {
+const Header = ({ onMenuClick }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    axios
-      .get('http://localhost:3001/api/users/profile', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const res = await axios.get('http://localhost:3001/api/users/profile', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setUser(res.data);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error('Error fetching user:', err);
-      });
+      }
+    };
+
+    fetchUser();
   }, []);
+
 
   return (
     <header className="w-full flex justify-between items-center px-4 py-4 sm:px-6 bg-white shadow-sm border-b border-gray-200">
@@ -60,6 +64,18 @@ const Header = ({ pageTitle, onMenuClick }) => {
           </li>
           <li>
             <NavLink
+              to="/categories"
+              className={({ isActive }) =>
+                `font-medium transition-colors duration-200 ${
+                  isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'
+                }`
+              }
+            >
+              Categories
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/products"
               className={({ isActive }) =>
                 `font-medium transition-colors duration-200 ${
@@ -96,14 +112,14 @@ const Header = ({ pageTitle, onMenuClick }) => {
           </li>
           <li>
             <NavLink
-              to="/history"
+              to="/transactions"
               className={({ isActive }) =>
                 `font-medium transition-colors duration-200 ${
                   isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'
                 }`
               }
             >
-              History
+              Transactions
             </NavLink>
           </li>
         </ul>
@@ -111,7 +127,7 @@ const Header = ({ pageTitle, onMenuClick }) => {
 
 
       {/* Right Section: Profile Picture - Always visible */}
-      <div className="flex items-center">
+      <div className="flex items-center ">
         <Link to="/profile" aria-label="Profile">
           <img
             src={user?.ImageURL || 'https://i.pinimg.com/1200x/5f/91/41/5f91413c8a9e766a5139c6cfe5caa837.jpg'} 

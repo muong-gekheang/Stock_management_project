@@ -29,7 +29,6 @@ const getWeekRange = () => {
 
 export async function getDashboardStats(req, res) {
   try {
-    console.log("Dashboard request started");
     const userId = req.user.UserID;
 
     // Get total products for this user
@@ -52,7 +51,6 @@ export async function getDashboardStats(req, res) {
         model: Category,
         where: { UserID: userId }
       }],
-      attributes: ["ProductID", "ProductName", "CurrentStock", "MinStockLevel"],
     });
 
     // Get today's start and end time
@@ -85,8 +83,6 @@ export async function getDashboardStats(req, res) {
     );
     salesAmountToday = parseFloat(salesAmountToday.toFixed(2));
 
-    // Calculate profit today (sum of (SalePrice - PurchasePrice) * Quantity for today)
-    // Need to join SaleItem and Product to get prices
     const saleItemsToday = await SaleItem.findAll({
       include: [
         {
@@ -191,7 +187,6 @@ export async function getDashboardStats(req, res) {
     res.json({
       weeklySales: {
         revenue: totalWeeklyRevenue,
-        profit: totalWeeklyProfit,
         range: {
           from: monday.toISOString().split("T")[0],
           to: sunday.toISOString().split("T")[0],

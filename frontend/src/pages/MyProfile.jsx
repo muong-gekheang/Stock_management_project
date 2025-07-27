@@ -175,11 +175,11 @@ function ProfilePage({ onMenuClick }) {
 
               {/* User Info */}
               <div className="text-center md:text-left mt-4 md:mt-0">
-                <h2 className="text-2xl font-bold text-gray-800">{user.Username}</h2>
+                <h2 className="text-2xl font-bold text-green-800">{user.Username}</h2>
                 <p className="text-gray-500">Store Owner</p>
                 <p className="text-sm text-gray-400">Joined {formatDate(user.JoinDate)}</p>
                 {user.StoreName && (
-                  <p className="text-sm font-medium text-indigo-600 mt-1">🏪 {user.StoreName}</p>
+                  <p className="text-sm font-medium text-green-600 mt-1">{user.StoreName}</p>
                 )}
               </div>
             </div>
@@ -197,7 +197,7 @@ function ProfilePage({ onMenuClick }) {
               <div className="text-sm opacity-90">Today's Orders</div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg text-center hover:scale-105 transition transform">
+            <div className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-xl shadow-lg text-center hover:scale-105 transition transform">
               <div className="text-2xl font-bold">${user.weeklyRevenue.toFixed(2)}</div>
               <div className="text-sm opacity-90">Weekly Revenue</div>
             </div>
@@ -217,7 +217,7 @@ function ProfilePage({ onMenuClick }) {
               <button
                 onClick={() => setIsEditing(!isEditing)}
                 className={`px-6 py-2 rounded-xl font-medium text-white shadow-md transition transform hover:scale-105 ${
-                  isEditing ? 'bg-red-500 hover:bg-red-600' : 'bg-indigo-600 hover:bg-indigo-700'
+                  isEditing ? 'bg-red-500 hover:bg-red-600' : 'bg-green-600 hover:bg-green-700'
                 }`}
               >
                 {isEditing ? '❌ Cancel' : '✎ Edit Profile'}

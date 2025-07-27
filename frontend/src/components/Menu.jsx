@@ -14,7 +14,7 @@ const Menu = ({ onClose }) => {
 
       {/* Menu Drawer - Partial Screen */}
       <div
-        className="fixed top-0 left-0 w-64 max-w-[80vw] h-full bg-green-700 text-white flex flex-col z-50 font-sans shadow-xl transform transition-transform duration-300 ease-in-out"
+        className="fixed top-0 left-0 w-64 max-w-[80vw] h-full bg-green-700 text-white flex flex-col z-50 transform transition-transform duration-300 ease-in-out"
         style={{ transform: 'translateX(0)' }}
       >
         {/* Header Section inside Drawer */}
@@ -39,6 +39,15 @@ const Menu = ({ onClose }) => {
                 onClick={onClose}
               >
                 Home
+              </Link>
+            </li>
+            <li className="mb-1 px-2">
+              <Link
+                to="/categories"
+                className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
+                onClick={onClose}
+              >
+                Categories
               </Link>
             </li>
             <li className="mb-1 px-2">
@@ -70,11 +79,11 @@ const Menu = ({ onClose }) => {
             </li>
             <li className="mb-1 px-2">
               <Link
-                to="/history" 
+                to="/transactions" 
                 className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
                 onClick={onClose}
               >
-                History
+                Transactions
               </Link>
             </li>
           </ul>
