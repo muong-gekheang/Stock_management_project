@@ -60,6 +60,18 @@ const Header = ({ pageTitle, onMenuClick }) => {
           </li>
           <li>
             <NavLink
+              to="/categories"
+              className={({ isActive }) =>
+                `font-medium transition-colors duration-200 ${
+                  isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'
+                }`
+              }
+            >
+              Categories
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/products"
               className={({ isActive }) =>
                 `font-medium transition-colors duration-200 ${
@@ -92,6 +104,18 @@ const Header = ({ pageTitle, onMenuClick }) => {
               }
             >
               Purchases
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/suppliers"
+              className={({ isActive }) =>
+                `font-medium transition-colors duration-200 ${
+                  isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'
+                }`
+              }
+            >
+              Suppliers
             </NavLink>
           </li>
           <li>

@@ -31,10 +31,11 @@ export default function SaleHistoryPage({ onMenuClick }) {
 
         // Fetch purchases
         const purchasesRes = await axios.get('http://localhost:3001/api/purchases', {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` } 
         });
         const userPurchases = purchasesRes.data.purchases || [];
         setPurchases(userPurchases);
+        console.log("userPurchases stringified: ", JSON.stringify(userPurchases));
 
         const revenue = userSales.reduce((sum, sale) => sum + (parseFloat(sale.TotalAmount) || 0), 0);
         const expenses = userPurchases.reduce((sum, purchase) => sum + (parseFloat(purchase.TotalAmount) || 0), 0);
@@ -185,6 +186,7 @@ export default function SaleHistoryPage({ onMenuClick }) {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                      
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">

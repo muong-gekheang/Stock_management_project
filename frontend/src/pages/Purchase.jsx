@@ -171,7 +171,7 @@ export default function RecordPurchasePage({ onMenuClick }) {
               {items.map((item, index) => (
                 <div key={index} className="grid grid-cols-3 gap-3 items-end">
                   <div>
-                    <label className="block text-xs text-gray-600">Product ID</label>
+                    <label className="block text-xs text-gray-600">Product Name</label>
                     <select
                       value={item.productId}
                       onChange={(e) => handleItemChange(index, 'productId', e.target.value)}

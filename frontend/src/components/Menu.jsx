@@ -43,6 +43,15 @@ const Menu = ({ onClose }) => {
             </li>
             <li className="mb-1 px-2">
               <Link
+                to="/categories"
+                className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
+                onClick={onClose}
+              >
+                categories
+              </Link>
+            </li>
+            <li className="mb-1 px-2">
+              <Link
                 to="/products"
                 className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
                 onClick={onClose}
@@ -66,6 +75,15 @@ const Menu = ({ onClose }) => {
                 onClick={onClose}
               >
                 Purchases
+              </Link>
+            </li>
+            <li className="mb-1 px-2">
+              <Link
+                to="/suppliers"
+                className="text-white no-underline text-lg font-medium block py-3 px-4 rounded-lg transition duration-300 ease-in hover:bg-white/15"
+                onClick={onClose}
+              >
+                suppliers
               </Link>
             </li>
             <li className="mb-1 px-2">

@@ -29,6 +29,8 @@ export const getUserProducts = async (req, res) => {
   }
 };
 
+
+
 export const getLowStockProducts = async (req, res) => {
   try {
     const userId = req.user.UserID;
@@ -113,4 +115,74 @@ export const createUserProduct = async (req, res ) => {
     console.error('Error creating product:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
+}
+
+export const updateProduct = async(req, res) => {
+  const userId = req.user.UserID;
+  const id = parseInt(req.params.id);
+  const {
+    productName,
+    categoryId,
+    importedPrice,
+    sellingPrice,
+    quantity,
+    lowStockThreshold,
+    imageURL, 
+  } = req.body;
+
+  try{
+    const product = await Product.findOne({
+      where: { ProductID: id },
+      include: [{
+        model: Category,
+        where: { UserID: userId } // ensures user owns this product's category
+      }]
+    });
+
+    if(!product){
+      return res.status(404).json({message: "Product not found"})
+    }
+
+
+    product.ProductName = productName || product.ProductName;
+    product.CategoryId = categoryId || product.CategoryId;
+    product.PurchasePrice = importedPrice || product.PurchasePrice;
+    product.SalePrice = sellingPrice || product.SalePrice;
+    product.CurrentStock = quantity || product.CurrentStock;
+    product.MinStockLevel = lowStockThreshold || product.MinStockLevel;
+    product.ImageURL = imageURL || product.ImageURL;
+
+    await product.save();
+    return res.json({ message: "Product updated successfully", product });
+
+  }catch ( error ){
+    console.error("Product update failed");
+    return res.status(500).json({ message: "Product update failed", error: error.message });
+  }
+
+}
+
+export const deleteProduct = async (req, res) => {
+  const userId = req.user.UserID;
+  const id = parseInt(req.params.id);
+  try{
+    const product = await Product.findOne({
+      where: { ProductID: productId },
+      include: [{
+        model: Category,
+        where: { UserID: userId } // ensures user owns this product's category
+      }]
+    });
+
+    if(!product){
+      return res.status(404).json({message: "Product not found"})
+    }
+
+    await product.destroy();
+    return res.json({ message: "Product deleted successfully" });
+  } catch ( error ) {
+    console.error("Product deletion failed:", error);
+    return res.status(500).json({ message: "Product deletion failed", error: error.message });
+  }
+
 }

@@ -57,12 +57,14 @@ export default function RecordSalePage({ onMenuClick }) {
       (p) => p.ProductID === parseInt(selectedProductId)
     );
     const autoPrice = selectedProduct?.SalePrice?.toString() || '';
+    const currentStock = selectedProduct?.CurrentStock || 0;
 
     const newItems = [...items];
     newItems[index] = {
       ...newItems[index],
       productId: selectedProductId,
       unitPrice: autoPrice,
+      CurrentStock: currentStock,
     };
     setItems(newItems);
   };
@@ -198,6 +200,7 @@ export default function RecordSalePage({ onMenuClick }) {
                     <input
                       type="number"
                       min="1"
+                      max={item.CurrentStock}
                       value={item.quantity}
                       onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"

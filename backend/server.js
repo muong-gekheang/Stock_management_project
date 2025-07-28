@@ -21,14 +21,14 @@ connectDB();
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/categories", categoryRoutes)
-app.use("/api/suppliers", supplierRoutes)
-app.use("/api/sales", saleRoutes)
-app.use("/api/purchases", purchaseRoutes)
+app.use("/api/categories", categoryRoutes);
+app.use("/api/suppliers", supplierRoutes);
+app.use("/api/sales", saleRoutes);
+app.use("/api/purchases", purchaseRoutes);
 
 const PORT = process.env.PORT || 3001
 
