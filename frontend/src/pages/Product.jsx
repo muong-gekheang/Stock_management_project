@@ -48,15 +48,17 @@ const Product = ({ onMenuClick }) => {
     return (
         <div className="min-h-screen bg-gray-50">
             <Header pageTitle="My Products" onMenuClick={onMenuClick} />
-            <div className="flex items-center justify-between py-6 px-10  ">
-                <Search className="w-6 h-6 text-green-900" />
-                <input
-                        type="text"
-                        placeholder="Search by product name..."
-                        value={searchTerm}
-                        onChange={handleSearch}
-                        className="w-full outline-none"
-                    />
+            <div className="flex items-center justify-between py-6 px-10 space-x-4 ">
+                <div className="flex items-center bg-white px-3 py-2 rounded shadow w-full max-w-md">
+                    <Search className="w-6 h-6 text-green-900" />
+                    <input
+                            type="text"
+                            placeholder="Search by product name..."
+                            value={searchTerm}
+                            onChange={handleSearch}
+                            className="w-full outline-none"
+                        />
+                </div>   
                 <div className="space-x-4">
                     <Link to="/add-product">
                         <button className="bg-green-600 text-white font-medium px-4 py-2 rounded shadow hover:bg-green-700">
